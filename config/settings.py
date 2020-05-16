@@ -125,3 +125,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'cms.User'
 ALLOWED_HOSTS = ['0.0.0.0']
+LOGIN_URL = 'cms:login'
+LOGIN_REDIRECT_URL = 'cms:top'
+LOGOUT_REDIRECT_URL = 'cms:top'
