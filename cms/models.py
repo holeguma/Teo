@@ -51,7 +51,8 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
         _('username'),
         max_length=150,
         unique=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        help_text=_(
+            'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         validators=[username_validator],
         error_messages={
             'unique': _("A user with that username already exists."),
@@ -66,7 +67,8 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
+        help_text=_(
+            'Designates whether the user can log into this admin site.'),
     )
     is_active = models.BooleanField(
         _('active'),
@@ -104,3 +106,9 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"
+
+
+class Subject(models.Model):
+    name = models.CharField(max_length=20)
+    user = models.ForeignKey(
+        User, verbose_name='教えられること', on_delete=models.CASCADE, related_name='subject')

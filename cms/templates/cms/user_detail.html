@@ -23,7 +23,7 @@
                     <a href="{% url 'cms:user_update' user.pk %}">
                         <button class="button is-small is-info is-inverted is-outlined">
                             <span class="icon is-small is-left"><i class="fas fa-user-edit"></i></span>
-                            <strong>プロフィールを追加する</strong>
+                            <strong>プロフィールを編集する</strong>
                         </button>
                     </a>
                     {% endif %}
@@ -37,8 +37,78 @@
 {% block content %}
 <section class="section">
     <div class="container">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor
-            vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</p>
+        <b>教えられること</b>
+        <button onclick="$('#example-5').collapse('toggle')">新規作成</button>
+        <div class="collapse" id="example-5">
+            <b>教えられることを追加する</b>
+            <form id="ajax-add-subject" action="{% url 'cms:add_subject' %}" method="POST">
+                <input type="text" id="id_name" required>
+                <button type="submit">追加</button>
+                {% csrf_token %}
+            </form>
+        </div>
+        <div id="subjects">
+            {% for subject in request.user.subject.all %}
+            <p>{{ subject.name }}</p>
+            {% endfor %}
+        </div>
     </div>
+    <!-- <div class="container">
+        
+    </div> -->
 </section>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $('#ajax-add-subject').on('submit', e => {
+        e.preventDefault();
+
+        $.ajax({
+            'url': '{% url "cms:add_subject" %}',
+            'type': 'POST',
+            'data': {
+                'name': $('#id_name').val(),
+            },
+            'dataType': 'json'
+        }).done(response => {
+            const p = $('<p>', { text: response.name });
+            $('#subjects').append(p);
+            $('#id_name').val('');
+        });
+
+    });
+</script>
+
+
 {% endblock %}

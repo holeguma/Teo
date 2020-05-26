@@ -19,10 +19,12 @@
         <div class="tile is-ancestor">
             <div class="tile is-12 is-vertical is-parent">
                 {% for object in object_list %}
+                {% if user.is_staff or not object.is_staff and object.id != user.id %}
                 <div class="tile is-child box">
                     <a class="title is-4" href="{% url 'cms:user_detail' object.id %}">{{ object.username }}</a>
-                    <p>Lorem ipsum dolor sit</p>
+                    <p></p>
                 </div>
+                {% endif %}
                 {% endfor %}
             </div>
         </div>
