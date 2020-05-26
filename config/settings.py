@@ -126,5 +126,5 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'cms.User'
 ALLOWED_HOSTS = ['0.0.0.0']
 LOGIN_URL = 'cms:login'
-LOGIN_REDIRECT_URL = 'cms:top'
+LOGIN_REDIRECT_URL = 'cms:user_list'
 LOGOUT_REDIRECT_URL = 'cms:top'

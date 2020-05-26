@@ -2,13 +2,15 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import (
     LoginView, LogoutView,
 )
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import resolve_url
 from django.urls import reverse_lazy
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import (
     CreateView, UpdateView, DeleteView,
 )
+
+from .models import Subject
 
 from .mixins import OnlyYouMixin
 from .forms import (
@@ -17,6 +19,8 @@ from .forms import (
 
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+
+from django.views.decorators.http import require_POST, require_GET
 
 UserModel = get_user_model()
 
@@ -79,3 +83,13 @@ class UserDelete(OnlyYouMixin, DeleteView):
     model = UserModel
     template_name = 'cms/user_delete.html'
     success_url = reverse_lazy('cms:top')
+
+
+@require_POST
+def add_subject(request):
+    name = request.POST.get('name')
+    subject = Subject.objects.create(name=name, user=request.user)
+    d = {
+        'name': subject.name,
+    }
+    return JsonResponse(d)
