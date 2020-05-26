@@ -38,6 +38,7 @@
 <section class="section">
     <div class="container">
         <b>教えられること</b>
+        {% if user.pk == request.user.pk %}
         <button onclick="$('#example-5').collapse('toggle')">新規作成</button>
         <div class="collapse" id="example-5">
             <b>教えられることを追加する</b>
@@ -47,8 +48,9 @@
                 {% csrf_token %}
             </form>
         </div>
+        {% endif %}
         <div id="subjects">
-            {% for subject in request.user.subject.all %}
+            {% for subject in user.subject.all %}
             <p>{{ subject.name }}</p>
             {% endfor %}
         </div>
